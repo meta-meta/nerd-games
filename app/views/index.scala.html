@@ -1,0 +1,9 @@
+@(games: Seq[Game])
+
+@main("Nerd Gamers") {
+    <ul>
+    @for(game <- games) {
+        <li>@game.title</li>
+    }
+    </ul>
+}
