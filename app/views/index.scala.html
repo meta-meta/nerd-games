@@ -6,4 +6,10 @@
         <li>@game.title</li>
     }
     </ul>
+
+    @helper.form(action = routes.Application.vote()) {
+        <input type="text" name="newGameTitle" /><br/>
+
+        <input type="submit" value="Vote" />
+    }
 }

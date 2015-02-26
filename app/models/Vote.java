@@ -4,11 +4,15 @@ import play.data.format.Formats;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.Date;
 
 @Entity
 public class Vote extends Model {
+
+    @Id
+    public Integer id;
 
     @ManyToOne
     public Game game;
@@ -16,6 +20,6 @@ public class Vote extends Model {
     @Formats.DateTime(pattern="dd/MM/yyyy")
     public Date created = new Date();
 
-    public static Finder<Long, Vote> find = new Finder<>(Long.class, Vote.class);
+    public static Finder<Integer, Vote> find = new Finder<>(Integer.class, Vote.class);
 
 }

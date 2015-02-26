@@ -11,7 +11,7 @@ import java.util.Date;
 public class Game extends Model {
 
     @Id
-    public int id;
+    public Integer id;
 
     public String title;
 
@@ -20,5 +20,5 @@ public class Game extends Model {
 
     public boolean owned = false;
 
-    public static Finder<Long, Game> find = new Finder<>(Long.class, Game.class);
+    public static Finder<Integer, Game> find = new Finder<>(Integer.class, Game.class);
 }
