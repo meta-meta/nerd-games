@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 
 public class Application extends Controller {
 
+    /* see conf/routes to see how these are wired up */
+
+    /* This serves the home page.
+        index.scala.html takes in the parameters passed to index.render
+        */
     public static Result index() {
         // query the DB for all games, then split them into owned/not owned
         List<Game> allGames = Game.find.all();
@@ -26,7 +31,7 @@ public class Application extends Controller {
 
         List<Vote> votes = Vote.find.all();
 
-        // generate a map of game ids to votes for that game
+        // generate a map of game ids to votes for games we don't own
         Map<Integer, Integer> votesPerGame = new HashMap<>();
         for(Game g : notOwned) {
             long numVotes = votes.stream().filter(v -> v.game.id.equals(g.id)).count();
@@ -45,6 +50,8 @@ public class Application extends Controller {
                 ));
     }
 
+    /* This is the endpoint hit by the form submit on the home page
+    *  If all is well with the form, it will render voted.scala.html */
     public static Result vote() {
         Form<VoteData> voteForm = Form.form(VoteData.class).bindFromRequest();
 
@@ -69,15 +76,15 @@ public class Application extends Controller {
 
             Vote v = new Vote();
             v.game = g;
-
             Ebean.save(v);
 
             return ok(voted.render(g));
         }
     }
 
+    /* This is the administration page for checking off recent acquisitions */
     public static Result gamesNotOwned() {
-        List<Game> notOwned = Game.find.all().stream()
+        List<Game> notOwned = Game.find.all().stream() //TODO: only fetch games we don't own from the DB
                 .filter(g -> !g.owned)
                 .collect(Collectors.toList());
 
@@ -86,6 +93,7 @@ public class Application extends Controller {
         ));
     }
 
+    /* This is the endpoint hit by the form post on the administration page  */
     public static Result acquireGame() {
         Map<String, String[]> map = request().body().asFormUrlEncoded();
         String[] gameIds = map.get("gameId");

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
+/* Data model for Games. Play automagically creates a table based on this bean */
 @Entity
 public class Game extends Model {
 
