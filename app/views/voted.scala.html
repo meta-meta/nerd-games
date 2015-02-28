@@ -3,4 +3,11 @@
 @main("Nerd Gamers") {
     1 vote added for @game.title <br>
     Thanks for voting. Your vote matters!
+
+    <a href="@routes.Application.index()">return to index</a>
+
+    <script type="text/javascript">
+        // set unbreakable security flag to disable voting until tomorrow
+        localStorage.votedForXboxGame = new Date();
+    </script>
 }

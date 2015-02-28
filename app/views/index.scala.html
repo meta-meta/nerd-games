@@ -1,15 +1,65 @@
-@(games: Seq[Game])
+@(gamesOwned: Seq[Game], gamesNotOwned: Seq[Game], votesPerGame: Map[Integer, Integer])
 
 @main("Nerd Gamers") {
-    <ul>
-    @for(game <- games) {
-        <li>@game.title</li>
-    }
+    <ul class="list-group">
+        <li class="list-group-item-heading">Games we own</li>
+
+        @for(game <- gamesOwned) {
+            <li class="list-group-item">@game.title</li>
+        }
     </ul>
 
+
     @helper.form(action = routes.Application.vote()) {
-        <input type="text" name="newGameTitle" /><br/>
+
+        <ul class="list-group">
+            <li class="list-group-item-heading">Games we want</li>
+
+            @for(game <- gamesNotOwned) {
+                <li class="list-group-item">
+                    <input type="radio" name="gameId" value="@game.id" />
+                    @game.title (@votesPerGame(game.id) vote(s))
+                </li>
+            }
+
+            <li class="list-group-item">
+                <label for="newGameTitle">or vote for a new game</label>
+                <input type="text" name="newGameTitle" /><br/>
+            </li>
+
+        </ul>
 
         <input type="submit" value="Vote" />
+
+        <script type="text/javascript">
+            // TODO: this breaks if the last time someone voted was the same day last month
+            var canVote = !localStorage.votedForXboxGame ||
+                new Date(localStorage.votedForXboxGame).getDate() != new Date().getDate();
+
+            $('input').attr('disabled', !canVote);
+            if(!canVote) {
+                $(':submit').val('Voting disabled until tomorrow');
+            }
+
+
+            var $newGameTitle = $('[name=newGameTitle]');
+
+            function validateForm() {
+                var valid = $(':radio:checked').length || $newGameTitle.val( ).length;
+                $(':submit').attr('disabled', !valid);
+            }
+
+            validateForm();
+
+            $newGameTitle.keyup(function(e){
+                $(':radio').attr('disabled', !!$(this).val().length);
+                validateForm();
+            });
+
+            $(':radio').change(function(e) {
+                validateForm();
+            });
+
+        </script>
     }
 }

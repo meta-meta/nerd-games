@@ -1,0 +1,33 @@
+@(gamesNotOwned: Seq[Game])
+
+@main("Nerd Gamers") {
+    @helper.form(action = routes.Application.acquireGame()) {
+
+        <ul class="list-group">
+            <li class="list-group-item-heading">Select recently acquired games</li>
+
+            @for(game <- gamesNotOwned) {
+                <li class="list-group-item">
+                    <input type="checkbox" name="gameId" value="@game.id" />
+                    @game.title
+                </li>
+            }
+        </ul>
+
+        <input type="submit" value="Acquire Selected Games" />
+
+        <script type="text/javascript">
+            function validateForm() {
+                var valid = $(':checkbox:checked').length;
+                $(':submit').attr('disabled', !valid);
+            }
+
+            validateForm();
+
+            $(':checkbox').change(function(e) {
+                validateForm();
+            });
+
+        </script>
+    }
+}
